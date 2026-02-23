@@ -53,7 +53,7 @@ def login():
 
 @app.route("/api/add_product",methods=["POST"])
 def addProducts():
-    product_name =request.form['product_name']
+    product_name=request.form['product_name']
     product_description=request.form['product_description']
     product_category=request.form['product_category']
     product_cost=request.form['product_cost']
@@ -75,6 +75,18 @@ def addProducts():
     cursor.execute(sql,data)
     connection.commit()
     return jsonify({"message":"product entered added successfully"})
+
+@app.route("/api/access_products")
+def accessProducts():
+    connection=pymysql.connect(host="localhost",user="root",password="",database="trevor_sokogarden")
+    cursor=connection.cursor(pymysql.cursors.DictCursor)
+    sql ="select * from product_details "
+    cursor.execute(sql)
+    if cursor.rowcount==0:
+        return jsonify ({"message":"no products found"})
+    else:
+        products=cursor.fetchall()
+        return jsonify({"here are our products":products})
 
 
     
